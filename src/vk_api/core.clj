@@ -9,10 +9,12 @@
                             (for [[k v] m]
                               (str (name k) "=" v)))))
 
-(defn- give [method & {:as params}]
+(defn give [method & {:as params}]
   (let [params (merge config/default-params params)]
     (as-> (str "https://api.vk.com/method/"
                method
                (map2params params)) $
       (client/get $)
       (json/read-str (:body $)))))
+
+(def wall-get (partial give "wall.get" :owner_id (config/group :owner_id)))
