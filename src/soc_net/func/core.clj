@@ -1,12 +1,16 @@
 (ns soc-net.func.core
   (:require 
      [vk-api.core :as vk]
-     [components.core :as cp]
-     [soc-net.func.fmt-date :as fmt-date]
+     [views.core :as rc]
    ))
 
+(def g (nth (get (vk/group) "response") 0))
+
 (defn home []
-  (let [wall-response (vk/wall-get :count 3)]
-    wall-response))
+  (as-> (vk/wall-get :count 10) $
+      (get $ "response")
+      (rc/index $ g)
+      (rc/static $)
+    ))
 
 (home)

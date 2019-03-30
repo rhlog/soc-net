@@ -11,7 +11,7 @@
         port-str (or (get args-map "-p")
                      (get args-map "--port")
                      "8080")]
-    (web/run #'routes/routes {:port (Integer/parseInt port-str)})))
+    (web/run #'routes/all {:port (Integer/parseInt port-str)})))
 
 (comment
   (def server (-main "--port" "8000"))

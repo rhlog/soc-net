@@ -1,4 +1,4 @@
-(ns soc-net.func.fmt-date
+(ns soc-net.func.time
   (:require 
      [clj-time.core :as tcore]
      [clj-time.format :as tformat]
@@ -7,9 +7,9 @@
    ))
 
 
-(defn unixtime->date [t]
-  (let [t (* t 1000)
-        formatter (tformat/formatter "HH:mm dd-MM-yyyy")]
+(defn from-unix [t format-str]
+  (let [t         (* t 1000)
+        formatter (tformat/formatter format-str)]
     (->> t 
          (tcoerce/from-long)
          (tformat/unparse formatter)

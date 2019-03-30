@@ -4,6 +4,7 @@
   :dependencies [
                  [org.clojure/clojure       "1.10.0"]
                  [org.clojure/clojurescript "1.10.520"]
+                 [org.clojure/data.json     "0.2.6"]
                  [ring/ring-core            "1.7.1"]
                  [clj-http                  "3.9.1"]
                  [rum                       "0.11.3"]
@@ -11,6 +12,7 @@
                  [compojure                 "1.6.1"]
                  [org.clojure/data.json     "0.2.6"]
                  [clj-time                  "0.15.0"]
+                 [markdown-clj              "1.0.7"]
                  ]
 
   :plugins [[lein-ring "0.12.5"]
