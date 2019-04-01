@@ -1,8 +1,7 @@
 (ns soc-net.server
   (:require
      [immutant.web :as web]
-     [soc-net.routes :as routes]
-  ))
+     [soc-net.routes :as routes]))
 
 
 
@@ -14,6 +13,5 @@
     (web/run #'routes/all {:port (Integer/parseInt port-str)})))
 
 (comment
-  (def server (-main "--port" "8000"))
-  (web/stop server)
-  )
+  (def server (-main "--port" "3000"))
+  (web/stop server))

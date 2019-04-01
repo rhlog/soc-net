@@ -2,74 +2,76 @@
     margin: 0;
     padding: 0;
     color: #222;
-    background-color: #fdf0e0;
+    background-color: #f5eade;
+    display: grid;
+    grid-template-columns: 270px 1fr 200px;
 }
 
 .page__panel {
     background-color: #ddb788;
     box-shadow: 0 3px 10px #8d6340;
+}
+
+.page__panel-fix {
+    position:sticky;
     display: inline-block;
-    width: 300px;
-    height: 100%;
-    position: fixed;
     top: 0;
+    width: 100%;
 }
 
 .page__content {
-    margin-left: 310px;
+    justify-self: center;
 }
 
 .page__aside {
-    width:200px;
+    background-color: #f0e0cf;
 }
-.page__menu {
-    grid-area: menu;
-}
-.page__brand {
-    grid-area: brand;
-}
+
 
 .i {
     text-align:center;
     margin:1em 1em 3em 1em;
+    display: block;
 }
 .i__name {
     text-transform: uppercase;
     font-size: xx-large;
+    color: #fff;
+    text-shadow: 1px 1px 2px #000;
 }
 .i__logo {
     border-radius: 50%;
-    box-shadow: 0 0 10px #ccc;
-}
-.i__desc {
-    font-weight: 400;
-    font-size: 1em;
-    color: #4c4c4c;
+    border: 3px solid #fdfdfd;
+    box-shadow: 1px 1px 3px #4b2812;
 }
 
 
+.menu {
 
-
-.block-p {
-    padding: 1em
 }
 
-.block-p__item {
-    padding-bottom: 1em;
-}
-.block-p__item:last-child {
-    padding-bottom: 0;
+.menu a {
+    display: block;
+    background-color: #6b4629;
+    text-decoration: none;
+    padding: .7em 1em;
+    text-align:center;
+    color: #fff;
+    box-sizing: content-box;
+    border-bottom: 1px solid #ffffff2e;
+    font-size: 1.2em;
+    font-family: monospace;
 }
 
-.block-m__item {
-    margin-bottom: 3em;
+.menu a:last-child {
+    border-bottom: none;
 }
-.block-m__item:first-child {
-    margin-top:1em;
+
+.menu a:hover {
+    background-color: #8c6f59;
+    transition: background-color 0.5s ease-out 0.1s
 }
-.block-m__item:last-child {
-    margin-bottom: 1em;
-}
+
 
 .post {
     max-width: 510px;
@@ -77,6 +79,14 @@
     border-radius: 1em;
     overflow: hidden;
     box-shadow: 0 0 4px #cad5a2;
+    margin-top: 3em;
+}
+.post:last-child {
+}
+
+.post__media img{
+    width: 100%;
+    height: auto;
 }
 
 .post__text {

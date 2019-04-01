@@ -6,10 +6,11 @@
             [soc-net.func.core :as fun]
    ))
 
+
 (defroutes routes-handler
-  (GET "/" req (fun/home))
+  (GET "/:n{\\d*}" [n] (fun/home (if (= n "") 1 (Integer/parseInt n)) ))
   
-  (route/resources "/" )
+  (route/resources "/public" )
   (route/not-found "<h1>Page not found</h1>"))
 
 (def all (cjhandler/site routes-handler))
