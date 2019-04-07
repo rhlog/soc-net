@@ -10,4 +10,6 @@
    :access_token (:service_key app)}) ;; сервисный ключ доступа
 
 (def group
-  {:owner_id "13293880"}) ;; id группы
+  {:owner_id "81391111"
+             ;;"13293880"
+             }) ;; id группы

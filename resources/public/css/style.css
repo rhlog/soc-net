@@ -82,6 +82,11 @@
     margin-top: 3em;
 }
 .post:last-child {
+    margin-bottom: 1.5em;
+}
+
+.post:first-child {
+    margin-top: 1.5em;
 }
 
 .post__media img{
@@ -100,7 +105,10 @@
     text-align: right;
 }
 
+.post__text, .post__footer {
+    margin: 0 1em;
 
+}
 
 .mark {
     color: #222;

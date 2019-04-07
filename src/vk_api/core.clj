@@ -15,8 +15,9 @@
                method
                (map2params params)) $
       (client/get $)
-      (json/read-str (:body $)))))
+      (json/read-str (:body $))
+      (get $ "response"))))
 
 (def wall-get (partial give "wall.get" :owner_id (str "-" (config/group :owner_id))))
 
-(def group (partial give "groups.getById" :group_ids (config/group :owner_id) :fields "description"))
+(def group (nth (give "groups.getById" :group_ids (config/group :owner_id) :fields "description") 0))

@@ -1,4 +1,4 @@
-(ns soc-net.func.time
+(ns soc-net.time
   (:require 
      [clj-time.core :as tcore]
      [clj-time.format :as tformat]

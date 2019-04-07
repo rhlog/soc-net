@@ -1,0 +1,28 @@
+(ns soc-net.home
+  (:require 
+     [vk-api.core :as vk]
+     [views.core :as rc]
+   ))
+
+
+;; index [& {:keys [sitename brand menu posts pagination bodyclass]}]
+
+(let [brand vk/group
+      wall-get (vk/wall-get :count 10 :offset (* (- n 1) 10))]
+  (rc/index :sitename   sitename
+            :brand      (rc/brand :description description
+                                  :photo       photo
+                                  :sitename    sitename)
+            :menu       (rc/menu menu-items)
+            :posts      (for [i posts] (rc/post i))
+            :pagination (rc/pagination :number-page number-page :count-posts count-posts)))
+
+(defn home
+  ([]
+   (home 1))
+
+  ([n]
+   (as->  $
+       (get $ "response")
+       (rc/static $)
+     )))

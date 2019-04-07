@@ -10,8 +10,8 @@
 
 (defmethod m-cont "photo" [media-item]
   (let [{:strs [text date sizes]} (get media-item "photo")
-        {:strs [width height url type]} (nth sizes 4
-                                          (last sizes))]
+        photo  (nth sizes 4 (last sizes))
+        {:strs [width height url type]} photo]
      [:img
            {:alt text
             :src url
@@ -20,74 +20,80 @@
             }]))
 
 (defmethod m-cont :default [item-media]
-  nil)
+  :?)
 
 
 
 (rum/defc post [post-item]
   (let [{:strs [text date attachments]} post-item]
-    (if (and text date attachments)
-     [:.post.block-m__item
-       [:.post__media
+    (if (not (= "" text))
+     [:div
+       [:div
          (for [i attachments]
           (m-cont i))]
-      [:.block-p
-       [:.post__text.block-p__item text]
-       [:.post__footer.list-p__item
-         [:.mark.post__mark
-          [:.mark__name "добавлено"]
-          [:.mark__value (t/from-unix date "dd-MM-yyyy HH:mm")] ]
-         [:.mark.post__mark
-          [:.mark__name "автор"]
-          [:.mark__value "Rustam"]]
+      [:div
+       [:div text]
+       [:div
+         [:div
+          [:div "добавлено"]
+          [:div (t/from-unix date "dd-MM-yyyy HH:mm")] ]
+         [:div
+          [:div "добавлено"]
+          [:div "Rustam"]]
          ]]]
      nil
     )))
 
-(rum/defc pagination [len]
-  [:.pagination
-   ])
+(rum/defc brand [& {:keys [description photo sitename]}]
+  [:a {:title description}
+    [:img {:src photo}]
+    [:h1 sitename]
+    [:h2 description]])
 
-(rum/defc list-posts [posts len]
-    [:.block-m.container
-      (for [item posts]
-        (post item))
-      (pagination len)
-     ])
-
-(rum/defc brand [{:strs [description photo_100 name]}]
-  [:a.page__brand.i {:title description}
-    [:img.i__logo {:src photo_100}]
-    [:h1.i__name name]
-    [:h2.i__desc ]])
-
-(rum/defc menu []
+(rum/defc menu [ menu-items ]
   [:.menu
     (map #(let [{:keys [text url]} %]
             [:a {:href url} text])
-         [{:text "Посты" :url "/"}
-          {:text "О нас" :url "/#about"}])])
+          menu-items)])
+
+(rum/defc pagination [& {:keys [number-page count-posts]}]
+  [:.pagination number-page count-posts])
 
 
-
-(rum/defc index [response group]
-  (let [{:strs [items count]} response]
-    [:html {:lang "ru"}
+(rum/defc page [& {:keys [style
+                          script
+                          lang 
+                          charset
+                          sitename
+                          content
+                          bodyclass]
+                   :or {lang "ru"
+                        charset "utf-8"}}]
+    [:html {:lang lang}
      [:head
-      [:meta {:charset "utf-8"}]
+      [:meta {:charset charset}]
       [:meta {:name "viewport" :content "width=device-width, initial-scale=1, shrink-to-fit=no"}]
-      [:title (get group "name")]
-      [:link {:rel "stylesheet" :href "/public/css/style.css"}]
+      [:title sitename]
+      (for [i style]
+        [:link {:rel "stylesheet" :href i}])
       ]
-     [:body.page
-      [:.page__panel
-       [:.page__panel-fix
-        (brand group)
-        (menu)]]
-      [:.page__content
-        (list-posts items count) ]
-      [:.page__aside ] 
-      ]]))
+     [:body {:class bodyclass}
+      content
+      (for [i script]
+        [:script {:src i}])
+      ]])
+
+(defn index [& {:keys [sitename brand menu posts pagination bodyclass]
+                :or {bodyclass "page page__index"}}]
+    (page :sitename sitename
+          :bodyclass bodyclass
+          :content [:.container
+                    [:.panel
+                     brand
+                     menu] 
+                    [:.list-posts
+                       posts
+                       pagination]]))
 
 
 (defn static [hiccup]
