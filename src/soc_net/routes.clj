@@ -7,10 +7,8 @@
    ))
 
 
-(def group
-
 (defroutes routes-handler
-  (GET "/:n{\\d*}" [n] (home (if (= n "") 1 (Integer/parseInt n)) ))
+  (GET "/:n{\\d*}" [n] (home/home (if (= n "") 1 (Integer/parseInt n)) ))
   
   (route/resources "/public" )
   (route/not-found "<h1>Page not found</h1>"))

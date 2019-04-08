@@ -1,7 +1,7 @@
 (ns views.core
   (:require
     [rum.core :as rum]
-    [soc-net.func.time :as t ]
+    [soc-net.time :as t ]
     [markdown.core :as md]
   ))
 
@@ -10,45 +10,44 @@
 
 (defmethod m-cont "photo" [media-item]
   (let [{:strs [text date sizes]} (get media-item "photo")
-        photo  (nth sizes 4 (last sizes))
+        max-photo (last sizes)
+        photo  (nth sizes 4 max-photo)
         {:strs [width height url type]} photo]
      [:img
            {:alt text
             :src url
             :width width
             :height height
+
             }]))
 
 (defmethod m-cont :default [item-media]
-  :?)
+  nil)
 
 
 
 (rum/defc post [post-item]
   (let [{:strs [text date attachments]} post-item]
-    (if (not (= "" text))
-     [:div
-       [:div
-         (for [i attachments]
-          (m-cont i))]
-      [:div
-       [:div text]
-       [:div
-         [:div
-          [:div "добавлено"]
-          [:div (t/from-unix date "dd-MM-yyyy HH:mm")] ]
-         [:div
-          [:div "добавлено"]
-          [:div "Rustam"]]
-         ]]]
-     nil
-    )))
+    [:.post
+     [:.post__media-content
+      (for [i attachments]
+        (m-cont i))]
+     [:.post__text text]
+     [:.post__footer
+      [:span
+        [:span "добавлено"]
+        [:span (t/from-unix date "dd-MM-yyyy HH:mm")] ]
+      [:span
+        [:span "добавлено"]
+        [:span "Rustam"]]]]
+    ))
 
 (rum/defc brand [& {:keys [description photo sitename]}]
-  [:a {:title description}
-    [:img {:src photo}]
-    [:h1 sitename]
-    [:h2 description]])
+  [:a.brand {:title description}
+    [:img.brand__logo {:src photo}]
+    [:.brand__sitename sitename]
+    [:.brand__description [:.span description]]])
+
 
 (rum/defc menu [ menu-items ]
   [:.menu
@@ -56,13 +55,36 @@
             [:a {:href url} text])
           menu-items)])
 
-(rum/defc pagination [& {:keys [number-page count-posts]}]
-  [:.pagination number-page count-posts])
+
+(rum/defc pagination [& {:keys [start end hip]}]
+  (fn [cur]
+    [:.pagi
+     (let [
+           hip+start (+ hip start)
+           cur+start (+ cur (dec start))
+           point (cond
+                  (<= cur+start hip+start) hip+start
+                  (>= cur (- end hip))     (- end hip)
+                  :else                    cur+start)
+  
+           pagi  (range (- point hip) (+ point (inc hip)))
+        ]
+       (as-> pagi $
+         (if (> (first pagi) start)
+           (conj $ "..")
+           $)
+         (if (< (last pagi)  end )
+           (concat $ [".."])
+           $)
+         (concat [1] $ [(inc end)])
+         (map #(if (not= % "..")
+                 [:a.pagi__item {:href (str "/" %)} %]
+                 [:span.pagi__ellipsis ".."]) $)))]))
+
+(def pagi (pagination :start 2 :end 14 :hip 3))
 
 
-(rum/defc page [& {:keys [style
-                          script
-                          lang 
+(rum/defc page [& {:keys [lang 
                           charset
                           sitename
                           content
@@ -74,26 +96,26 @@
       [:meta {:charset charset}]
       [:meta {:name "viewport" :content "width=device-width, initial-scale=1, shrink-to-fit=no"}]
       [:title sitename]
-      (for [i style]
-        [:link {:rel "stylesheet" :href i}])
-      ]
+      [:link {:rel "stylesheet"
+              :href "/public/css/style.css" }]]
      [:body {:class bodyclass}
       content
-      (for [i script]
-        [:script {:src i}])
-      ]])
+      [:script {:src "/public/js/bundle.js"}]]])
 
 (defn index [& {:keys [sitename brand menu posts pagination bodyclass]
                 :or {bodyclass "page page__index"}}]
     (page :sitename sitename
           :bodyclass bodyclass
           :content [:.container
-                    [:.panel
-                     brand
-                     menu] 
-                    [:.list-posts
-                       posts
-                       pagination]]))
+                     [:.sidebar
+                      [:.fix-top
+                        brand
+                        menu]]
+                     [:.content
+                        posts
+                        pagination]
+                     [:.aside]]
+))
 
 
 (defn static [hiccup]
